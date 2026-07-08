@@ -11,6 +11,11 @@ public class RecommendationResponse {
     private BigDecimal price;
     private Double rating;
     private Integer reviewsCount;
+    private String color;
+    private String targetGender;
+    private String shoeType;
+    private Boolean waterproof;
+    private String season;
     private int score;
     private Set<String> matchedKeywords;
     private String reason;
@@ -22,6 +27,11 @@ public class RecommendationResponse {
             BigDecimal price,
             Double rating,
             Integer reviewsCount,
+            String color,
+            String targetGender,
+            String shoeType,
+            Boolean waterproof,
+            String season,
             int score,
             Set<String> matchedKeywords,
             String reason
@@ -32,6 +42,11 @@ public class RecommendationResponse {
         this.price = price;
         this.rating = rating;
         this.reviewsCount = reviewsCount;
+        this.color = color;
+        this.targetGender = targetGender;
+        this.shoeType = shoeType;
+        this.waterproof = waterproof;
+        this.season = season;
         this.score = score;
         this.matchedKeywords = matchedKeywords;
         this.reason = reason;
@@ -59,6 +74,26 @@ public class RecommendationResponse {
 
     public Integer getReviewsCount() {
         return reviewsCount;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public String getTargetGender() {
+        return targetGender;
+    }
+
+    public String getShoeType() {
+        return shoeType;
+    }
+
+    public Boolean getWaterproof() {
+        return waterproof;
+    }
+
+    public String getSeason() {
+        return season;
     }
 
     public int getScore() {

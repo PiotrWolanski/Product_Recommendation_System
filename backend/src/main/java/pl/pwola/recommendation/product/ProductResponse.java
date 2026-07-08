@@ -12,6 +12,11 @@ public class ProductResponse {
     private Double rating;
     private Integer reviewsCount;
     private String url;
+    private String color;
+    private String targetGender;
+    private String shoeType;
+    private Boolean waterproof;
+    private String season;
 
     public ProductResponse(
             Long id,
@@ -21,7 +26,12 @@ public class ProductResponse {
             BigDecimal price,
             Double rating,
             Integer reviewsCount,
-            String url
+            String url,
+            String color,
+            String targetGender,
+            String shoeType,
+            Boolean waterproof,
+            String season
     ) {
         this.id = id;
         this.name = name;
@@ -31,6 +41,11 @@ public class ProductResponse {
         this.rating = rating;
         this.reviewsCount = reviewsCount;
         this.url = url;
+        this.color = color;
+        this.targetGender = targetGender;
+        this.shoeType = shoeType;
+        this.waterproof = waterproof;
+        this.season = season;
     }
 
     public static ProductResponse fromProduct(Product product) {
@@ -42,7 +57,12 @@ public class ProductResponse {
                 product.getPrice(),
                 product.getRating(),
                 product.getReviewsCount(),
-                product.getUrl()
+                product.getUrl(),
+                product.getColor(),
+                product.getTargetGender(),
+                product.getShoeType(),
+                product.getWaterproof(),
+                product.getSeason()
         );
     }
 
@@ -76,5 +96,25 @@ public class ProductResponse {
 
     public String getUrl() {
         return url;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public String getTargetGender() {
+        return targetGender;
+    }
+
+    public String getShoeType() {
+        return shoeType;
+    }
+
+    public Boolean getWaterproof() {
+        return waterproof;
+    }
+
+    public String getSeason() {
+        return season;
     }
 }

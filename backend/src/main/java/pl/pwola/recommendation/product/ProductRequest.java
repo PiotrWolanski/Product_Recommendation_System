@@ -29,6 +29,16 @@ public class ProductRequest {
 
     private String url;
 
+    private String color;
+
+    private String targetGender;
+
+    private String shoeType;
+
+    private Boolean waterproof;
+
+    private String season;
+
     public ProductRequest() {
     }
 
@@ -58,5 +68,25 @@ public class ProductRequest {
 
     public String getUrl() {
         return url;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public String getTargetGender() {
+        return targetGender;
+    }
+
+    public String getShoeType() {
+        return shoeType;
+    }
+
+    public Boolean getWaterproof() {
+        return waterproof;
+    }
+
+    public String getSeason() {
+        return season;
     }
 }

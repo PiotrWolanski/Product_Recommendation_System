@@ -61,6 +61,11 @@ public class RecommendationService {
                 product.getPrice(),
                 product.getRating(),
                 product.getReviewsCount(),
+                product.getColor(),
+                product.getTargetGender(),
+                product.getShoeType(),
+                product.getWaterproof(),
+                product.getSeason(),
                 finalScore,
                 matchedKeywords,
                 buildReason(matchedKeywords, finalScore)
@@ -71,8 +76,21 @@ public class RecommendationService {
         return String.join(" ",
                 safe(product.getName()),
                 safe(product.getCategory()),
-                safe(product.getDescription())
+                safe(product.getDescription()),
+                safe(product.getColor()),
+                safe(product.getTargetGender()),
+                safe(product.getShoeType()),
+                safe(product.getSeason()),
+                waterproofText(product.getWaterproof())
         );
+    }
+
+    private String waterproofText(Boolean waterproof) {
+        if (Boolean.TRUE.equals(waterproof)) {
+            return "wodoodporne wodoodporny nieprzemakalne waterproof membrana deszcz";
+        }
+
+        return "";
     }
 
     private String safe(String value) {
@@ -81,20 +99,20 @@ public class RecommendationService {
 
     private String buildReason(Set<String> matchedKeywords, int score) {
         if (matchedKeywords == null || matchedKeywords.isEmpty()) {
-            return "Product has low relevance because no important query terms were matched.";
+            return "Produkt ma niskie dopasowanie, ponieważ nie wykryto ważnych wspólnych cech.";
         }
 
         if (score >= 75) {
-            return "Product strongly matches the query because it contains features related to: "
+            return "Produkt mocno pasuje do zapytania, ponieważ zawiera cechy: "
                     + String.join(", ", matchedKeywords) + ".";
         }
 
         if (score >= 40) {
-            return "Product partially matches the query because it contains: "
+            return "Produkt częściowo pasuje do zapytania, ponieważ zawiera: "
                     + String.join(", ", matchedKeywords) + ".";
         }
 
-        return "Product has weak relevance, but some terms were matched: "
+        return "Produkt ma słabe dopasowanie, ale wykryto wspólne cechy: "
                 + String.join(", ", matchedKeywords) + ".";
     }
 }

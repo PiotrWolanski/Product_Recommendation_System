@@ -44,6 +44,10 @@ public class ScoringService {
     }
 
     public int calculateFinalScore(double textScore, Product product) {
+        if (textScore <= 0.0) {
+            return 0;
+        }
+
         double ratingScore = calculateRatingScore(product.getRating());
         double reviewsScore = calculateReviewsScore(product.getReviewsCount());
 

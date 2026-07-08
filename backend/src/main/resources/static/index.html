@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Product Recommendation NLP</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            color: #1f2933;
+        }
+
+        .page {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .hero h1 {
+            margin-bottom: 10px;
+            font-size: 36px;
+        }
+
+        .hero p {
+            margin: 0;
+            color: #607080;
+            font-size: 17px;
+        }
+
+        .search-box {
+            background: white;
+            padding: 24px;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+            margin-bottom: 28px;
+        }
+
+        .search-row {
+            display: flex;
+            gap: 12px;
+        }
+
+        input {
+            flex: 1;
+            padding: 16px 18px;
+            border: 1px solid #d0d7de;
+            border-radius: 12px;
+            font-size: 18px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #2563eb;
+        }
+
+        button {
+            padding: 0 26px;
+            border: none;
+            border-radius: 12px;
+            background: #2563eb;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        button:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+        }
+
+        .examples {
+            margin-top: 14px;
+            color: #607080;
+            font-size: 14px;
+        }
+
+        .example-link {
+            color: #2563eb;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        .status {
+            margin: 16px 0;
+            color: #607080;
+        }
+
+        .results {
+            display: grid;
+            gap: 16px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 6px 18px rgba(15, 23, 42, 0.07);
+            border-left: 6px solid #2563eb;
+        }
+
+        .product-header {
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            align-items: flex-start;
+        }
+
+        .product-title {
+            margin: 0;
+            font-size: 22px;
+        }
+
+        .category {
+            color: #607080;
+            margin-top: 4px;
+        }
+
+        .score {
+            min-width: 86px;
+            text-align: center;
+            padding: 10px;
+            border-radius: 12px;
+            background: #eff6ff;
+            color: #1d4ed8;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .meta {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin: 16px 0;
+            color: #344054;
+        }
+
+        .reason {
+            margin: 12px 0;
+            line-height: 1.5;
+        }
+
+        .keywords {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+
+        .keyword {
+            background: #eef2f7;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 13px;
+            color: #344054;
+        }
+
+        .empty {
+            background: white;
+            padding: 24px;
+            border-radius: 16px;
+            text-align: center;
+            color: #607080;
+        }
+
+        @media (max-width: 700px) {
+            .search-row {
+                flex-direction: column;
+            }
+
+            button {
+                padding: 14px;
+            }
+
+            .product-header {
+                flex-direction: column;
+            }
+
+            .score {
+                text-align: left;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="page">
+    <section class="hero">
+        <h1>Wyszukiwarka produktów NLP</h1>
+        <p>Wpisz, czego szukasz, a system pokaże najlepiej dopasowane produkty.</p>
+    </section>
+
+    <section class="search-box">
+        <div class="search-row">
+            <input
+                    id="queryInput"
+                    type="text"
+                    placeholder="Np. buty wodoodporne do chodzenia po górach"
+                    autocomplete="off"
+            >
+            <button id="searchButton" onclick="searchProducts()">Szukaj</button>
+        </div>
+
+        <div class="examples">
+            Przykłady:
+            <span class="example-link" onclick="setExample('buty wodoodporne do chodzenia po gorach')">buty w góry</span>
+            <span class="example-link" onclick="setExample('eleganckie buty do pracy')">buty do pracy</span>
+            <span class="example-link" onclick="setExample('kalosze na deszcz i bloto')">kalosze na deszcz</span>
+            <span class="example-link" onclick="setExample('cieple buty zimowe na snieg')">buty zimowe</span>
+        </div>
+    </section>
+
+    <div id="status" class="status"></div>
+    <section id="results" class="results"></section>
+</div>
+
+<script>
+    const queryInput = document.getElementById("queryInput");
+    const searchButton = document.getElementById("searchButton");
+    const statusBox = document.getElementById("status");
+    const resultsBox = document.getElementById("results");
+
+    queryInput.addEventListener("keydown", function (event) {
+        if (event.key === "Enter") {
+            searchProducts();
+        }
+    });
+
+    function setExample(text) {
+        queryInput.value = text;
+        searchProducts();
+    }
+
+    async function searchProducts() {
+        const query = queryInput.value.trim();
+
+        if (!query) {
+            statusBox.textContent = "Wpisz zapytanie, np. „buty wodoodporne do chodzenia po górach”.";
+            resultsBox.innerHTML = "";
+            return;
+        }
+
+        searchButton.disabled = true;
+        statusBox.textContent = "Szukam najlepiej dopasowanych produktów...";
+        resultsBox.innerHTML = "";
+
+        try {
+            const response = await fetch("/api/recommendations", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json; charset=UTF-8"
+                },
+                body: JSON.stringify({
+                    query: query,
+                    maxResults: 5
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error("Request failed with status " + response.status);
+            }
+
+            const results = await response.json();
+            renderResults(results);
+        } catch (error) {
+            statusBox.textContent = "Wystąpił błąd podczas wyszukiwania. Sprawdź, czy backend działa.";
+            console.error(error);
+        } finally {
+            searchButton.disabled = false;
+        }
+    }
+
+    function renderResults(results) {
+        if (!results || results.length === 0) {
+            statusBox.textContent = "";
+            resultsBox.innerHTML = `
+                <div class="empty">
+                    Nie znaleziono pasujących produktów. Spróbuj wpisać inne zapytanie.
+                </div>
+            `;
+            return;
+        }
+
+        statusBox.textContent = `Znaleziono ${results.length} najlepiej dopasowanych produktów.`;
+
+        resultsBox.innerHTML = results
+            .map(product => createProductCard(product))
+            .join("");
+    }
+
+    function createProductCard(product) {
+        const keywords = Array.from(product.matchedKeywords || [])
+            .map(keyword => `<span class="keyword">${escapeHtml(keyword)}</span>`)
+            .join("");
+
+        return `
+            <article class="product-card">
+                <div class="product-header">
+                    <div>
+                        <h2 class="product-title">${escapeHtml(product.productName)}</h2>
+                        <div class="category">${escapeHtml(product.category || "Brak kategorii")}</div>
+                    </div>
+                    <div class="score">${product.score}/100</div>
+                </div>
+
+                <div class="meta">
+                    <span>Cena: ${formatPrice(product.price)}</span>
+                    <span>Ocena: ${product.rating ?? "brak"}/5</span>
+                    <span>Opinie: ${product.reviewsCount ?? 0}</span>
+                </div>
+
+                <p class="reason">${escapeHtml(product.reason)}</p>
+
+                <div class="keywords">
+                    ${keywords}
+                </div>
+            </article>
+        `;
+    }
+
+    function formatPrice(price) {
+        if (price === null || price === undefined) {
+            return "brak danych";
+        }
+
+        return Number(price).toFixed(2) + " zł";
+    }
+
+    function escapeHtml(value) {
+        if (value === null || value === undefined) {
+            return "";
+        }
+
+        return String(value)
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll('"', "&quot;")
+            .replaceAll("'", "&#039;");
+    }
+</script>
+</body>
+</html>

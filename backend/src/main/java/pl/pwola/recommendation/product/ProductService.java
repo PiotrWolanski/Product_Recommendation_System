@@ -35,7 +35,12 @@ public class ProductService {
                 request.getPrice(),
                 request.getRating(),
                 request.getReviewsCount(),
-                request.getUrl()
+                request.getUrl(),
+                request.getColor(),
+                request.getTargetGender(),
+                request.getShoeType(),
+                request.getWaterproof(),
+                request.getSeason()
         );
 
         Product savedProduct = productRepository.save(product);

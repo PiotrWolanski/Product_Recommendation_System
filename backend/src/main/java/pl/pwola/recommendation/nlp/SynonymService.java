@@ -10,14 +10,112 @@ public class SynonymService {
     private final Map<String, Set<String>> synonyms = new HashMap<>();
 
     public SynonymService() {
-        addGroup("buty", "obuwie", "buciki");
-        addGroup("wodoodporne", "wodoodporny", "waterproof", "nieprzemakalne", "membrana");
-        addGroup("góry", "gory", "górskie", "gorskie", "trekking", "trekkingowe", "outdoor", "szlak", "szlaki");
-        addGroup("chodzenie", "chodzenia", "spacer", "spacery", "wędrówka", "wedrowka", "wędrówki", "wedrowki");
-        addGroup("bieganie", "biegania", "biegowe", "run", "running");
-        addGroup("zimowe", "zima", "śnieg", "snieg", "ocieplane", "ciepłe", "cieple");
-        addGroup("eleganckie", "formalny", "formalne", "biznesowe", "skórzane", "skorzane");
-        addGroup("deszcz", "błoto", "bloto", "kalosze", "gumowe");
+        addGroup("buty", "but", "obuwie", "buciki");
+
+        addGroup(
+                "wodoodporne", "wodoodporny", "wodoodporna",
+                "nieprzemakalne", "nieprzemakalny", "waterproof",
+                "membrana", "membraną", "deszcz"
+        );
+
+        addGroup(
+                "góry", "gory", "górach", "gorach", "górami", "gorami",
+                "górskie", "gorskie", "górski", "gorski",
+                "trekking", "trekkingowe", "trekkingowy",
+                "outdoor", "outdoorowe", "outdoorowy",
+                "szlak", "szlaki", "szlaku", "teren", "terenowe", "terenowy"
+        );
+
+        addGroup(
+                "chodzenie", "chodzenia", "chodzić", "chodzic",
+                "spacer", "spacery", "spacerów", "spacerow",
+                "wędrówka", "wedrowka", "wędrówki", "wedrowki",
+                "turystyka", "turystyczne", "turystycznych"
+        );
+
+        addGroup(
+                "bieganie", "biegania", "biegowe", "biegowy",
+                "run", "running", "trail", "trailowe", "trailowy"
+        );
+
+        addGroup(
+                "zimowe", "zimowy", "zima", "śnieg", "snieg",
+                "ocieplane", "ocieplenie", "ciepłe", "cieple", "mróz", "mroz"
+        );
+
+        addGroup(
+                "eleganckie", "elegancki", "formalny", "formalne",
+                "biznesowe", "biznesowy", "skórzane", "skorzane", "skóra", "skora"
+        );
+
+        addGroup(
+                "randka", "randkę", "randke", "wyjście", "wyjscie",
+                "impreza", "wieczór", "wieczor", "eleganckie"
+        );
+
+        addGroup(
+                "szpilki", "szpilka", "obcasy", "obcas", "heels",
+                "czółenka", "czolenka"
+        );
+
+        addGroup(
+                "sneakersy", "sneakers", "trampki", "casual", "miejskie", "codzienne"
+        );
+
+        addGroup(
+                "botki", "kozaki", "boots", "jesienne", "jesień", "jesien"
+        );
+
+        addGroup(
+                "sandały", "sandaly", "sandał", "sandal", "letnie", "lato"
+        );
+
+        addGroup(
+                "deszcz", "deszczowe", "błoto", "bloto",
+                "kalosze", "gumowe", "gumowy", "ogród", "ogrod", "ogrodowe"
+        );
+
+        addGroup(
+                "robocze", "roboczy", "praca", "ochronne",
+                "bezpieczne", "safety", "wzmocnione", "nosek"
+        );
+
+        addGroup(
+                "damskie", "damski", "kobieta", "kobiety", "women", "female"
+        );
+
+        addGroup(
+                "męskie", "meskie", "męski", "meski", "mężczyzna", "mezczyzna",
+                "mężczyzny", "mezczyzny", "men", "male"
+        );
+
+        addGroup(
+                "unisex", "uniwersalne", "uniwersalny"
+        );
+
+        addGroup(
+                "czarne", "czarny", "black"
+        );
+
+        addGroup(
+                "brązowe", "brazowe", "brązowy", "brazowy", "brown"
+        );
+
+        addGroup(
+                "białe", "biale", "biały", "bialy", "white"
+        );
+
+        addGroup(
+                "beżowe", "bezowe", "beżowy", "bezowy", "beige"
+        );
+
+        addGroup(
+                "czerwone", "czerwony", "red"
+        );
+
+        addGroup(
+                "niebieskie", "niebieski", "blue", "granatowe", "granatowy"
+        );
     }
 
     private void addGroup(String... words) {
