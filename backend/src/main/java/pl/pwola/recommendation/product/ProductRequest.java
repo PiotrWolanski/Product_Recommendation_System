@@ -15,7 +15,13 @@ public class ProductRequest {
     @NotBlank(message = "Product description is required")
     private String description;
 
-    private String category;
+    private String mainCategory;
+    private String subCategory;
+    private String productType;
+    private String color;
+    private String targetGender;
+    private Boolean waterproof;
+    private String season;
 
     @DecimalMin(value = "0.0", inclusive = false, message = "Price must be greater than 0")
     private BigDecimal price;
@@ -29,16 +35,6 @@ public class ProductRequest {
 
     private String url;
 
-    private String color;
-
-    private String targetGender;
-
-    private String shoeType;
-
-    private Boolean waterproof;
-
-    private String season;
-
     public ProductRequest() {
     }
 
@@ -50,8 +46,32 @@ public class ProductRequest {
         return description;
     }
 
-    public String getCategory() {
-        return category;
+    public String getMainCategory() {
+        return mainCategory;
+    }
+
+    public String getSubCategory() {
+        return subCategory;
+    }
+
+    public String getProductType() {
+        return productType;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public String getTargetGender() {
+        return targetGender;
+    }
+
+    public Boolean getWaterproof() {
+        return waterproof;
+    }
+
+    public String getSeason() {
+        return season;
     }
 
     public BigDecimal getPrice() {
@@ -68,25 +88,5 @@ public class ProductRequest {
 
     public String getUrl() {
         return url;
-    }
-
-    public String getColor() {
-        return color;
-    }
-
-    public String getTargetGender() {
-        return targetGender;
-    }
-
-    public String getShoeType() {
-        return shoeType;
-    }
-
-    public Boolean getWaterproof() {
-        return waterproof;
-    }
-
-    public String getSeason() {
-        return season;
     }
 }

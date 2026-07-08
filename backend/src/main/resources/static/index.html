@@ -18,7 +18,7 @@
         }
 
         .page {
-            max-width: 1000px;
+            max-width: 1040px;
             margin: 0 auto;
             padding: 40px 20px;
         }
@@ -52,16 +52,21 @@
             gap: 12px;
         }
 
-        input {
-            flex: 1;
-            padding: 16px 18px;
+        input, select {
+            padding: 14px 16px;
             border: 1px solid #d0d7de;
             border-radius: 12px;
-            font-size: 18px;
+            font-size: 16px;
             outline: none;
+            background: white;
         }
 
-        input:focus {
+        input {
+            flex: 1;
+            font-size: 18px;
+        }
+
+        input:focus, select:focus {
             border-color: #2563eb;
         }
 
@@ -95,6 +100,28 @@
             color: #2563eb;
             cursor: pointer;
             margin-right: 10px;
+        }
+
+        .filters {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-top: 18px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .filter-group.hidden {
+            display: none;
+        }
+
+        .filter-group label {
+            color: #607080;
+            font-size: 13px;
         }
 
         .status {
@@ -151,6 +178,22 @@
             color: #344054;
         }
 
+        .attributes {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin: 10px 0 14px;
+        }
+
+        .attribute {
+            background: #f8fafc;
+            border: 1px solid #e5e7eb;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 13px;
+            color: #344054;
+        }
+
         .reason {
             margin: 12px 0;
             line-height: 1.5;
@@ -179,13 +222,17 @@
             color: #607080;
         }
 
-        @media (max-width: 700px) {
+        @media (max-width: 900px) {
             .search-row {
                 flex-direction: column;
             }
 
             button {
                 padding: 14px;
+            }
+
+            .filters {
+                grid-template-columns: 1fr;
             }
 
             .product-header {
@@ -218,10 +265,55 @@
 
         <div class="examples">
             Przykłady:
-            <span class="example-link" onclick="setExample('buty wodoodporne do chodzenia po gorach')">buty w góry</span>
-            <span class="example-link" onclick="setExample('eleganckie buty do pracy')">buty do pracy</span>
-            <span class="example-link" onclick="setExample('kalosze na deszcz i bloto')">kalosze na deszcz</span>
-            <span class="example-link" onclick="setExample('cieple buty zimowe na snieg')">buty zimowe</span>
+            <span class="example-link" onclick="setExample('buty wodoodporne w góry')">buty w góry</span>
+            <span class="example-link" onclick="setExample('czarna sukienka na randkę')">sukienka na randkę</span>
+            <span class="example-link" onclick="setExample('plecak trekkingowy w góry')">plecak trekkingowy</span>
+            <span class="example-link" onclick="setExample('kurtka przeciwdeszczowa')">kurtka przeciwdeszczowa</span>
+        </div>
+
+        <div class="filters">
+            <div class="filter-group" id="categoryGroup">
+                <label for="categoryFilter">Kategoria</label>
+                <select id="categoryFilter">
+                    <option value="">Dowolna kategoria</option>
+                    <option value="obuwie">Obuwie</option>
+                    <option value="odzież">Odzież</option>
+                    <option value="akcesoria">Akcesoria</option>
+                </select>
+            </div>
+
+            <div class="filter-group hidden" id="genderGroup">
+                <label for="genderFilter">Dla kogo</label>
+                <select id="genderFilter">
+                    <option value="">Dowolnie</option>
+                    <option value="męskie">Mężczyzna</option>
+                    <option value="damskie">Kobieta</option>
+                    <option value="unisex">Unisex</option>
+                </select>
+            </div>
+
+            <div class="filter-group hidden" id="productTypeGroup">
+                <label for="productTypeFilter">Rodzaj produktu</label>
+                <select id="productTypeFilter">
+                    <option value="">Dowolny rodzaj produktu</option>
+                </select>
+            </div>
+
+            <div class="filter-group hidden" id="colorGroup">
+                <label for="colorFilter">Kolor</label>
+                <select id="colorFilter">
+                    <option value="">Dowolny kolor</option>
+                    <option value="czarny">Czarny</option>
+                    <option value="brązowy">Brązowy</option>
+                    <option value="biały">Biały</option>
+                    <option value="beżowy">Beżowy</option>
+                    <option value="czerwony">Czerwony</option>
+                    <option value="niebieski">Niebieski</option>
+                    <option value="zielony">Zielony</option>
+                    <option value="szary">Szary</option>
+                    <option value="różowy">Różowy</option>
+                </select>
+            </div>
         </div>
     </section>
 
@@ -235,15 +327,174 @@
     const statusBox = document.getElementById("status");
     const resultsBox = document.getElementById("results");
 
+    const genderGroup = document.getElementById("genderGroup");
+    const productTypeGroup = document.getElementById("productTypeGroup");
+    const colorGroup = document.getElementById("colorGroup");
+
+    const categoryFilter = document.getElementById("categoryFilter");
+    const genderFilter = document.getElementById("genderFilter");
+    const productTypeFilter = document.getElementById("productTypeFilter");
+    const colorFilter = document.getElementById("colorFilter");
+
+    const productTypesByCategory = {
+        "obuwie": [
+            { value: "buty trekkingowe", label: "Buty trekkingowe", genders: ["męskie", "damskie", "unisex"] },
+            { value: "sneakersy", label: "Sneakersy", genders: ["męskie", "damskie", "unisex"] },
+            { value: "trampki", label: "Trampki", genders: ["męskie", "damskie", "unisex"] },
+            { value: "sandały", label: "Sandały", genders: ["męskie", "damskie", "unisex"] },
+            { value: "kalosze", label: "Kalosze", genders: ["męskie", "damskie", "unisex"] },
+            { value: "buty biegowe", label: "Buty biegowe", genders: ["męskie", "damskie", "unisex"] },
+            { value: "buty zimowe", label: "Buty zimowe", genders: ["męskie", "damskie", "unisex"] },
+            { value: "buty robocze", label: "Buty robocze", genders: ["męskie", "unisex"] },
+            { value: "półbuty", label: "Półbuty", genders: ["męskie"] },
+            { value: "szpilki", label: "Szpilki", genders: ["damskie"] },
+            { value: "czółenka", label: "Czółenka", genders: ["damskie"] },
+            { value: "botki", label: "Botki", genders: ["damskie"] },
+            { value: "kozaki", label: "Kozaki", genders: ["damskie"] }
+        ],
+        "odzież": [
+            { value: "kurtka przeciwdeszczowa", label: "Kurtka przeciwdeszczowa", genders: ["męskie", "damskie", "unisex"] },
+            { value: "kurtka zimowa", label: "Kurtka zimowa", genders: ["męskie", "damskie", "unisex"] },
+            { value: "bluza", label: "Bluza", genders: ["męskie", "damskie", "unisex"] },
+            { value: "koszulka", label: "Koszulka", genders: ["męskie", "damskie", "unisex"] },
+            { value: "spodnie trekkingowe", label: "Spodnie trekkingowe", genders: ["męskie", "damskie", "unisex"] },
+            { value: "jeansy", label: "Jeansy", genders: ["męskie", "damskie", "unisex"] },
+            { value: "sukienka", label: "Sukienka", genders: ["damskie"] },
+            { value: "spódnica", label: "Spódnica", genders: ["damskie"] }
+        ],
+        "akcesoria": [
+            { value: "plecak trekkingowy", label: "Plecak trekkingowy", genders: ["męskie", "damskie", "unisex"] },
+            { value: "plecak miejski", label: "Plecak miejski", genders: ["męskie", "damskie", "unisex"] },
+            { value: "czapka", label: "Czapka", genders: ["męskie", "damskie", "unisex"] },
+            { value: "rękawiczki", label: "Rękawiczki", genders: ["męskie", "damskie", "unisex"] },
+            { value: "skarpety trekkingowe", label: "Skarpety trekkingowe", genders: ["męskie", "damskie", "unisex"] },
+            { value: "torba sportowa", label: "Torba sportowa", genders: ["męskie", "damskie", "unisex"] },
+            { value: "torebka", label: "Torebka", genders: ["damskie"] }
+        ]
+    };
+
     queryInput.addEventListener("keydown", function (event) {
         if (event.key === "Enter") {
             searchProducts();
         }
     });
 
+    categoryFilter.addEventListener("change", function () {
+        resetGenderSelect();
+        resetProductTypeSelect();
+        resetColorSelect();
+
+        hide(productTypeGroup);
+        hide(colorGroup);
+
+        if (categoryFilter.value) {
+            show(genderGroup);
+        } else {
+            hide(genderGroup);
+        }
+
+        clearResults();
+    });
+
+    genderFilter.addEventListener("change", function () {
+        resetProductTypeSelect();
+        resetColorSelect();
+        hide(colorGroup);
+
+        if (genderFilter.value && categoryFilter.value) {
+            populateProductTypes();
+            show(productTypeGroup);
+        } else {
+            hide(productTypeGroup);
+        }
+
+        clearResults();
+    });
+
+    productTypeFilter.addEventListener("change", function () {
+        resetColorSelect();
+
+        if (productTypeFilter.value || productTypeFilter.selectedIndex > 0) {
+            show(colorGroup);
+        } else {
+            hide(colorGroup);
+        }
+
+        clearResults();
+    });
+
+    colorFilter.addEventListener("change", clearResults);
+
+    function show(element) {
+        element.classList.remove("hidden");
+    }
+
+    function hide(element) {
+        element.classList.add("hidden");
+    }
+
+    function resetGenderSelect() {
+        genderFilter.innerHTML = `
+            <option value="">Dowolnie</option>
+            <option value="męskie">Mężczyzna</option>
+            <option value="damskie">Kobieta</option>
+            <option value="unisex">Unisex</option>
+        `;
+    }
+
+    function resetProductTypeSelect() {
+        productTypeFilter.innerHTML = `
+            <option value="">Dowolny rodzaj produktu</option>
+        `;
+    }
+
+    function resetColorSelect() {
+        colorFilter.innerHTML = `
+            <option value="">Dowolny kolor</option>
+            <option value="czarny">Czarny</option>
+            <option value="brązowy">Brązowy</option>
+            <option value="biały">Biały</option>
+            <option value="beżowy">Beżowy</option>
+            <option value="czerwony">Czerwony</option>
+            <option value="niebieski">Niebieski</option>
+            <option value="zielony">Zielony</option>
+            <option value="szary">Szary</option>
+            <option value="różowy">Różowy</option>
+        `;
+    }
+
+    function populateProductTypes() {
+        const selectedCategory = categoryFilter.value;
+        const selectedGender = genderFilter.value;
+
+        resetProductTypeSelect();
+
+        if (!selectedCategory || !selectedGender) {
+            return;
+        }
+
+        const availableTypes = productTypesByCategory[selectedCategory] || [];
+
+        availableTypes
+            .filter(type => isProductTypeAvailableForGender(type, selectedGender))
+            .forEach(type => {
+                const option = document.createElement("option");
+                option.value = type.value;
+                option.textContent = type.label;
+                productTypeFilter.appendChild(option);
+            });
+    }
+
+    function isProductTypeAvailableForGender(type, selectedGender) {
+        if (selectedGender === "unisex") {
+            return type.genders.includes("unisex");
+        }
+
+        return type.genders.includes(selectedGender) || type.genders.includes("unisex");
+    }
+
     function setExample(text) {
         queryInput.value = text;
-        searchProducts();
     }
 
     async function searchProducts() {
@@ -267,7 +518,11 @@
                 },
                 body: JSON.stringify({
                     query: query,
-                    maxResults: 5
+                    maxResults: 5,
+                    mainCategory: normalizeOptionalFilter(categoryFilter.value),
+                    targetGender: normalizeOptionalFilter(genderFilter.value),
+                    productType: normalizeOptionalFilter(productTypeFilter.value),
+                    color: normalizeOptionalFilter(colorFilter.value)
                 })
             });
 
@@ -285,12 +540,20 @@
         }
     }
 
+    function normalizeOptionalFilter(value) {
+        if (!value || value.trim() === "") {
+            return null;
+        }
+
+        return value;
+    }
+
     function renderResults(results) {
         if (!results || results.length === 0) {
             statusBox.textContent = "";
             resultsBox.innerHTML = `
                 <div class="empty">
-                    Nie znaleziono pasujących produktów. Spróbuj wpisać inne zapytanie.
+                    Nie znaleziono pasujących produktów dla wybranych filtrów. Spróbuj zmienić zapytanie lub filtry.
                 </div>
             `;
             return;
@@ -305,6 +568,7 @@
 
     function createProductCard(product) {
         const keywords = Array.from(product.matchedKeywords || [])
+            .slice(0, 8)
             .map(keyword => `<span class="keyword">${escapeHtml(keyword)}</span>`)
             .join("");
 
@@ -313,7 +577,11 @@
                 <div class="product-header">
                     <div>
                         <h2 class="product-title">${escapeHtml(product.productName)}</h2>
-                        <div class="category">${escapeHtml(product.category || "Brak kategorii")}</div>
+                        <div class="category">
+                            ${escapeHtml(product.mainCategory || "Brak kategorii")}
+                            ${product.subCategory ? " / " + escapeHtml(product.subCategory) : ""}
+                            ${product.productType ? " / " + escapeHtml(product.productType) : ""}
+                        </div>
                     </div>
                     <div class="score">${product.score}/100</div>
                 </div>
@@ -324,6 +592,13 @@
                     <span>Opinie: ${product.reviewsCount ?? 0}</span>
                 </div>
 
+                <div class="attributes">
+                    <span class="attribute">Dla: ${escapeHtml(product.targetGender || "brak")}</span>
+                    <span class="attribute">Kolor: ${escapeHtml(product.color || "brak")}</span>
+                    <span class="attribute">Sezon: ${escapeHtml(product.season || "brak")}</span>
+                    <span class="attribute">Wodoodporne: ${product.waterproof ? "tak" : "nie"}</span>
+                </div>
+
                 <p class="reason">${escapeHtml(product.reason)}</p>
 
                 <div class="keywords">
@@ -331,6 +606,11 @@
                 </div>
             </article>
         `;
+    }
+
+    function clearResults() {
+        statusBox.textContent = "";
+        resultsBox.innerHTML = "";
     }
 
     function formatPrice(price) {

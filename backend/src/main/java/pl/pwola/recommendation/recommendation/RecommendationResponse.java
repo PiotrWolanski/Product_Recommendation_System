@@ -7,15 +7,16 @@ public class RecommendationResponse {
 
     private Long productId;
     private String productName;
-    private String category;
+    private String mainCategory;
+    private String subCategory;
+    private String productType;
+    private String color;
+    private String targetGender;
+    private Boolean waterproof;
+    private String season;
     private BigDecimal price;
     private Double rating;
     private Integer reviewsCount;
-    private String color;
-    private String targetGender;
-    private String shoeType;
-    private Boolean waterproof;
-    private String season;
     private int score;
     private Set<String> matchedKeywords;
     private String reason;
@@ -23,30 +24,32 @@ public class RecommendationResponse {
     public RecommendationResponse(
             Long productId,
             String productName,
-            String category,
+            String mainCategory,
+            String subCategory,
+            String productType,
+            String color,
+            String targetGender,
+            Boolean waterproof,
+            String season,
             BigDecimal price,
             Double rating,
             Integer reviewsCount,
-            String color,
-            String targetGender,
-            String shoeType,
-            Boolean waterproof,
-            String season,
             int score,
             Set<String> matchedKeywords,
             String reason
     ) {
         this.productId = productId;
         this.productName = productName;
-        this.category = category;
+        this.mainCategory = mainCategory;
+        this.subCategory = subCategory;
+        this.productType = productType;
+        this.color = color;
+        this.targetGender = targetGender;
+        this.waterproof = waterproof;
+        this.season = season;
         this.price = price;
         this.rating = rating;
         this.reviewsCount = reviewsCount;
-        this.color = color;
-        this.targetGender = targetGender;
-        this.shoeType = shoeType;
-        this.waterproof = waterproof;
-        this.season = season;
         this.score = score;
         this.matchedKeywords = matchedKeywords;
         this.reason = reason;
@@ -60,8 +63,32 @@ public class RecommendationResponse {
         return productName;
     }
 
-    public String getCategory() {
-        return category;
+    public String getMainCategory() {
+        return mainCategory;
+    }
+
+    public String getSubCategory() {
+        return subCategory;
+    }
+
+    public String getProductType() {
+        return productType;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public String getTargetGender() {
+        return targetGender;
+    }
+
+    public Boolean getWaterproof() {
+        return waterproof;
+    }
+
+    public String getSeason() {
+        return season;
     }
 
     public BigDecimal getPrice() {
@@ -74,26 +101,6 @@ public class RecommendationResponse {
 
     public Integer getReviewsCount() {
         return reviewsCount;
-    }
-
-    public String getColor() {
-        return color;
-    }
-
-    public String getTargetGender() {
-        return targetGender;
-    }
-
-    public String getShoeType() {
-        return shoeType;
-    }
-
-    public Boolean getWaterproof() {
-        return waterproof;
-    }
-
-    public String getSeason() {
-        return season;
     }
 
     public int getScore() {

@@ -31,16 +31,17 @@ public class ProductService {
         Product product = new Product(
                 request.getName(),
                 request.getDescription(),
-                request.getCategory(),
+                request.getMainCategory(),
+                request.getSubCategory(),
+                request.getProductType(),
+                request.getColor(),
+                request.getTargetGender(),
+                request.getWaterproof(),
+                request.getSeason(),
                 request.getPrice(),
                 request.getRating(),
                 request.getReviewsCount(),
-                request.getUrl(),
-                request.getColor(),
-                request.getTargetGender(),
-                request.getShoeType(),
-                request.getWaterproof(),
-                request.getSeason()
+                request.getUrl()
         );
 
         Product savedProduct = productRepository.save(product);

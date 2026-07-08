@@ -34,11 +34,52 @@ public class RecommendationService {
 
         return productRepository.findAll()
                 .stream()
+                .filter(product -> matchesFilters(product, request))
                 .map(product -> buildRecommendationResponse(product, queryTokens, expandedQueryTokens))
                 .filter(response -> response.getScore() > 0)
                 .sorted(Comparator.comparingInt(RecommendationResponse::getScore).reversed())
                 .limit(maxResults)
                 .toList();
+    }
+
+    private boolean matchesFilters(Product product, RecommendationRequest request) {
+        return matchesGender(product.getTargetGender(), request.getTargetGender())
+                && matchesTextFilter(product.getColor(), request.getColor())
+                && matchesTextFilter(product.getMainCategory(), request.getMainCategory())
+                && matchesTextFilter(product.getProductType(), request.getProductType());
+    }
+
+    private boolean matchesGender(String productGender, String selectedGender) {
+        if (isBlank(selectedGender)) {
+            return true;
+        }
+
+        if (isBlank(productGender)) {
+            return false;
+        }
+
+        if ("unisex".equalsIgnoreCase(selectedGender)) {
+            return "unisex".equalsIgnoreCase(productGender);
+        }
+
+        return selectedGender.equalsIgnoreCase(productGender)
+                || "unisex".equalsIgnoreCase(productGender);
+    }
+
+    private boolean matchesTextFilter(String productValue, String selectedValue) {
+        if (isBlank(selectedValue)) {
+            return true;
+        }
+
+        if (isBlank(productValue)) {
+            return false;
+        }
+
+        return productValue.equalsIgnoreCase(selectedValue);
+    }
+
+    private boolean isBlank(String value) {
+        return value == null || value.isBlank();
     }
 
     private RecommendationResponse buildRecommendationResponse(
@@ -57,15 +98,16 @@ public class RecommendationService {
         return new RecommendationResponse(
                 product.getId(),
                 product.getName(),
-                product.getCategory(),
+                product.getMainCategory(),
+                product.getSubCategory(),
+                product.getProductType(),
+                product.getColor(),
+                product.getTargetGender(),
+                product.getWaterproof(),
+                product.getSeason(),
                 product.getPrice(),
                 product.getRating(),
                 product.getReviewsCount(),
-                product.getColor(),
-                product.getTargetGender(),
-                product.getShoeType(),
-                product.getWaterproof(),
-                product.getSeason(),
                 finalScore,
                 matchedKeywords,
                 buildReason(matchedKeywords, finalScore)
@@ -75,11 +117,12 @@ public class RecommendationService {
     private String buildProductSearchText(Product product) {
         return String.join(" ",
                 safe(product.getName()),
-                safe(product.getCategory()),
                 safe(product.getDescription()),
+                safe(product.getMainCategory()),
+                safe(product.getSubCategory()),
+                safe(product.getProductType()),
                 safe(product.getColor()),
                 safe(product.getTargetGender()),
-                safe(product.getShoeType()),
                 safe(product.getSeason()),
                 waterproofText(product.getWaterproof())
         );
@@ -87,7 +130,7 @@ public class RecommendationService {
 
     private String waterproofText(Boolean waterproof) {
         if (Boolean.TRUE.equals(waterproof)) {
-            return "wodoodporne wodoodporny nieprzemakalne waterproof membrana deszcz";
+            return "wodoodporne wodoodporny nieprzemakalne waterproof membrana deszcz przeciwdeszczowe";
         }
 
         return "";

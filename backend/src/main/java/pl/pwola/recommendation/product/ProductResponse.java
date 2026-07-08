@@ -7,45 +7,48 @@ public class ProductResponse {
     private Long id;
     private String name;
     private String description;
-    private String category;
+    private String mainCategory;
+    private String subCategory;
+    private String productType;
+    private String color;
+    private String targetGender;
+    private Boolean waterproof;
+    private String season;
     private BigDecimal price;
     private Double rating;
     private Integer reviewsCount;
     private String url;
-    private String color;
-    private String targetGender;
-    private String shoeType;
-    private Boolean waterproof;
-    private String season;
 
     public ProductResponse(
             Long id,
             String name,
             String description,
-            String category,
+            String mainCategory,
+            String subCategory,
+            String productType,
+            String color,
+            String targetGender,
+            Boolean waterproof,
+            String season,
             BigDecimal price,
             Double rating,
             Integer reviewsCount,
-            String url,
-            String color,
-            String targetGender,
-            String shoeType,
-            Boolean waterproof,
-            String season
+            String url
     ) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.category = category;
+        this.mainCategory = mainCategory;
+        this.subCategory = subCategory;
+        this.productType = productType;
+        this.color = color;
+        this.targetGender = targetGender;
+        this.waterproof = waterproof;
+        this.season = season;
         this.price = price;
         this.rating = rating;
         this.reviewsCount = reviewsCount;
         this.url = url;
-        this.color = color;
-        this.targetGender = targetGender;
-        this.shoeType = shoeType;
-        this.waterproof = waterproof;
-        this.season = season;
     }
 
     public static ProductResponse fromProduct(Product product) {
@@ -53,16 +56,17 @@ public class ProductResponse {
                 product.getId(),
                 product.getName(),
                 product.getDescription(),
-                product.getCategory(),
+                product.getMainCategory(),
+                product.getSubCategory(),
+                product.getProductType(),
+                product.getColor(),
+                product.getTargetGender(),
+                product.getWaterproof(),
+                product.getSeason(),
                 product.getPrice(),
                 product.getRating(),
                 product.getReviewsCount(),
-                product.getUrl(),
-                product.getColor(),
-                product.getTargetGender(),
-                product.getShoeType(),
-                product.getWaterproof(),
-                product.getSeason()
+                product.getUrl()
         );
     }
 
@@ -78,8 +82,32 @@ public class ProductResponse {
         return description;
     }
 
-    public String getCategory() {
-        return category;
+    public String getMainCategory() {
+        return mainCategory;
+    }
+
+    public String getSubCategory() {
+        return subCategory;
+    }
+
+    public String getProductType() {
+        return productType;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public String getTargetGender() {
+        return targetGender;
+    }
+
+    public Boolean getWaterproof() {
+        return waterproof;
+    }
+
+    public String getSeason() {
+        return season;
     }
 
     public BigDecimal getPrice() {
@@ -96,25 +124,5 @@ public class ProductResponse {
 
     public String getUrl() {
         return url;
-    }
-
-    public String getColor() {
-        return color;
-    }
-
-    public String getTargetGender() {
-        return targetGender;
-    }
-
-    public String getShoeType() {
-        return shoeType;
-    }
-
-    public Boolean getWaterproof() {
-        return waterproof;
-    }
-
-    public String getSeason() {
-        return season;
     }
 }

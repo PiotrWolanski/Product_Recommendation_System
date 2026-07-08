@@ -18,7 +18,23 @@ public class Product {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String description;
 
-    private String category;
+    @Column(name = "main_category")
+    private String mainCategory;
+
+    @Column(name = "sub_category")
+    private String subCategory;
+
+    @Column(name = "product_type")
+    private String productType;
+
+    private String color;
+
+    @Column(name = "target_gender")
+    private String targetGender;
+
+    private Boolean waterproof;
+
+    private String season;
 
     private BigDecimal price;
 
@@ -30,47 +46,37 @@ public class Product {
     @Column(columnDefinition = "TEXT")
     private String url;
 
-    private String color;
-
-    @Column(name = "target_gender")
-    private String targetGender;
-
-    @Column(name = "shoe_type")
-    private String shoeType;
-
-    private Boolean waterproof;
-
-    private String season;
-
     public Product() {
     }
 
     public Product(
             String name,
             String description,
-            String category,
+            String mainCategory,
+            String subCategory,
+            String productType,
+            String color,
+            String targetGender,
+            Boolean waterproof,
+            String season,
             BigDecimal price,
             Double rating,
             Integer reviewsCount,
-            String url,
-            String color,
-            String targetGender,
-            String shoeType,
-            Boolean waterproof,
-            String season
+            String url
     ) {
         this.name = name;
         this.description = description;
-        this.category = category;
+        this.mainCategory = mainCategory;
+        this.subCategory = subCategory;
+        this.productType = productType;
+        this.color = color;
+        this.targetGender = targetGender;
+        this.waterproof = waterproof;
+        this.season = season;
         this.price = price;
         this.rating = rating;
         this.reviewsCount = reviewsCount;
         this.url = url;
-        this.color = color;
-        this.targetGender = targetGender;
-        this.shoeType = shoeType;
-        this.waterproof = waterproof;
-        this.season = season;
     }
 
     public Long getId() {
@@ -85,8 +91,32 @@ public class Product {
         return description;
     }
 
-    public String getCategory() {
-        return category;
+    public String getMainCategory() {
+        return mainCategory;
+    }
+
+    public String getSubCategory() {
+        return subCategory;
+    }
+
+    public String getProductType() {
+        return productType;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public String getTargetGender() {
+        return targetGender;
+    }
+
+    public Boolean getWaterproof() {
+        return waterproof;
+    }
+
+    public String getSeason() {
+        return season;
     }
 
     public BigDecimal getPrice() {
@@ -103,73 +133,5 @@ public class Product {
 
     public String getUrl() {
         return url;
-    }
-
-    public String getColor() {
-        return color;
-    }
-
-    public String getTargetGender() {
-        return targetGender;
-    }
-
-    public String getShoeType() {
-        return shoeType;
-    }
-
-    public Boolean getWaterproof() {
-        return waterproof;
-    }
-
-    public String getSeason() {
-        return season;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
-
-    public void setRating(Double rating) {
-        this.rating = rating;
-    }
-
-    public void setReviewsCount(Integer reviewsCount) {
-        this.reviewsCount = reviewsCount;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public void setColor(String color) {
-        this.color = color;
-    }
-
-    public void setTargetGender(String targetGender) {
-        this.targetGender = targetGender;
-    }
-
-    public void setShoeType(String shoeType) {
-        this.shoeType = shoeType;
-    }
-
-    public void setWaterproof(Boolean waterproof) {
-        this.waterproof = waterproof;
-    }
-
-    public void setSeason(String season) {
-        this.season = season;
     }
 }

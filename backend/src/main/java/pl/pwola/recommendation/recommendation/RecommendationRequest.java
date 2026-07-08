@@ -10,8 +10,13 @@ public class RecommendationRequest {
     private String query;
 
     @Min(value = 1, message = "maxResults must be at least 1")
-    @Max(value = 20, message = "maxResults cannot be greater than 20")
+    @Max(value = 50, message = "maxResults cannot be greater than 50")
     private Integer maxResults = 5;
+
+    private String targetGender;
+    private String color;
+    private String mainCategory;
+    private String productType;
 
     public RecommendationRequest() {
     }
@@ -22,5 +27,21 @@ public class RecommendationRequest {
 
     public Integer getMaxResults() {
         return maxResults;
+    }
+
+    public String getTargetGender() {
+        return targetGender;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public String getMainCategory() {
+        return mainCategory;
+    }
+
+    public String getProductType() {
+        return productType;
     }
 }
