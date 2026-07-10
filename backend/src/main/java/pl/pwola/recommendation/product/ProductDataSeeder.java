@@ -499,9 +499,9 @@ public class ProductDataSeeder implements CommandLineRunner {
             boolean waterproof,
             String model
     ) {
-        String waterproofDescription = waterproof
-                ? " Produkt posiada cechy wodoodporne, nieprzemakalne i dobrze sprawdza się podczas deszczu."
-                : " Produkt nie jest oznaczony jako wodoodporny.";
+            String waterproofDescription = waterproof
+                    ? " Produkt posiada cechy wodoodporne, nieprzemakalne i dobrze sprawdza się podczas deszczu."
+                    : " Produkt przeznaczony do standardowych warunków użytkowania.";
 
         return capitalize(template.productType()) + " " + model
                 + " w kolorze " + color

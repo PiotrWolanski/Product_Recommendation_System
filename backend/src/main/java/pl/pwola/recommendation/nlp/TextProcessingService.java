@@ -35,6 +35,7 @@ public class TextProcessingService {
                 .stream()
                 .map(this::cleanToken)
                 .filter(token -> token.length() > 1)
+                .filter(token -> !isNumber(token))
                 .filter(token -> !stopWordsProvider.getStopWords().contains(token))
                 .collect(Collectors.toCollection(LinkedHashSet::new));
     }
@@ -61,5 +62,9 @@ public class TextProcessingService {
                 .toLowerCase(Locale.ROOT)
                 .replaceAll("[^\\p{L}\\p{N}]", "")
                 .trim();
+    }
+
+    private boolean isNumber(String token) {
+        return token.matches("\\d+");
     }
 }

@@ -1,10 +1,13 @@
 package pl.pwola.recommendation.recommendation;
 
 import org.springframework.stereotype.Service;
+import pl.pwola.recommendation.nlp.PriceConstraint;
+import pl.pwola.recommendation.nlp.PriceExtractionService;
 import pl.pwola.recommendation.nlp.TextProcessingService;
 import pl.pwola.recommendation.product.Product;
 import pl.pwola.recommendation.product.ProductRepository;
 
+import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
@@ -15,26 +18,31 @@ public class RecommendationService {
     private final ProductRepository productRepository;
     private final TextProcessingService textProcessingService;
     private final ScoringService scoringService;
+    private final PriceExtractionService priceExtractionService;
 
     public RecommendationService(
             ProductRepository productRepository,
             TextProcessingService textProcessingService,
-            ScoringService scoringService
+            ScoringService scoringService,
+            PriceExtractionService priceExtractionService
     ) {
         this.productRepository = productRepository;
         this.textProcessingService = textProcessingService;
         this.scoringService = scoringService;
+        this.priceExtractionService = priceExtractionService;
     }
 
     public List<RecommendationResponse> recommendProducts(RecommendationRequest request) {
         Set<String> queryTokens = textProcessingService.extractImportantTokens(request.getQuery());
         Set<String> expandedQueryTokens = textProcessingService.extractExpandedTokens(request.getQuery());
+        PriceConstraint priceConstraint = priceExtractionService.extractPriceConstraint(request.getQuery());
 
         int maxResults = request.getMaxResults() == null ? 5 : request.getMaxResults();
 
         return productRepository.findAll()
                 .stream()
                 .filter(product -> matchesFilters(product, request))
+                .filter(product -> matchesPriceConstraint(product, priceConstraint))
                 .map(product -> buildRecommendationResponse(product, queryTokens, expandedQueryTokens))
                 .filter(response -> response.getScore() > 0)
                 .sorted(Comparator.comparingInt(RecommendationResponse::getScore).reversed())
@@ -47,6 +55,26 @@ public class RecommendationService {
                 && matchesTextFilter(product.getColor(), request.getColor())
                 && matchesTextFilter(product.getMainCategory(), request.getMainCategory())
                 && matchesTextFilter(product.getProductType(), request.getProductType());
+    }
+
+    private boolean matchesPriceConstraint(Product product, PriceConstraint priceConstraint) {
+        if (priceConstraint == null || !priceConstraint.hasAnyConstraint()) {
+            return true;
+        }
+
+        BigDecimal productPrice = product.getPrice();
+
+        if (productPrice == null) {
+            return false;
+        }
+
+        if (priceConstraint.minPrice() != null
+                && productPrice.compareTo(priceConstraint.minPrice()) < 0) {
+            return false;
+        }
+
+        return priceConstraint.maxPrice() == null
+                || productPrice.compareTo(priceConstraint.maxPrice()) <= 0;
     }
 
     private boolean matchesGender(String productGender, String selectedGender) {
