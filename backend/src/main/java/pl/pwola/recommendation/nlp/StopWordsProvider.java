@@ -49,7 +49,26 @@ public class StopWordsProvider {
             "jakieś",
             "jakies",
             "jakiś",
-            "jakis"
+            "jakis",
+            "cena",
+            "cenie",
+            "koszt",
+            "kosztuje",
+            "max",
+            "min",
+            "maksymalnie",
+            "minimum",
+            "poniżej",
+            "ponizej",
+            "powyżej",
+            "powyzej",
+            "więcej",
+            "wiecej",
+            "niż",
+            "niz",
+            "zł",
+            "zl",
+            "pln"
     );
 
     public Set<String> getStopWords() {

@@ -43,17 +43,18 @@ public class ScoringService {
         return matchedKeywords;
     }
 
-    public int calculateFinalScore(double textScore, Product product) {
-        if (textScore <= 0.0) {
+    public int calculateFinalScore(double textScore, double tfidfSimilarity, Product product) {
+        if (textScore <= 0.0 && tfidfSimilarity <= 0.0) {
             return 0;
         }
 
         double ratingScore = calculateRatingScore(product.getRating());
         double reviewsScore = calculateReviewsScore(product.getReviewsCount());
 
-        double finalScore = textScore * 0.75
-                + ratingScore * 0.15
-                + reviewsScore * 0.10;
+        double finalScore = tfidfSimilarity * 0.50
+                + textScore * 0.30
+                + ratingScore * 0.12
+                + reviewsScore * 0.08;
 
         return (int) Math.round(finalScore * 100);
     }
@@ -71,7 +72,7 @@ public class ScoringService {
             return 0.0;
         }
 
-        int maxExpectedReviews = 200;
+        int maxExpectedReviews = 300;
 
         return Math.min((double) reviewsCount / maxExpectedReviews, 1.0);
     }

@@ -17,6 +17,7 @@ public class RecommendationResponse {
     private BigDecimal price;
     private Double rating;
     private Integer reviewsCount;
+    private double tfidfSimilarity;
     private int score;
     private Set<String> matchedKeywords;
     private String reason;
@@ -34,6 +35,7 @@ public class RecommendationResponse {
             BigDecimal price,
             Double rating,
             Integer reviewsCount,
+            double tfidfSimilarity,
             int score,
             Set<String> matchedKeywords,
             String reason
@@ -50,6 +52,7 @@ public class RecommendationResponse {
         this.price = price;
         this.rating = rating;
         this.reviewsCount = reviewsCount;
+        this.tfidfSimilarity = tfidfSimilarity;
         this.score = score;
         this.matchedKeywords = matchedKeywords;
         this.reason = reason;
@@ -101,6 +104,10 @@ public class RecommendationResponse {
 
     public Integer getReviewsCount() {
         return reviewsCount;
+    }
+
+    public double getTfidfSimilarity() {
+        return tfidfSimilarity;
     }
 
     public int getScore() {

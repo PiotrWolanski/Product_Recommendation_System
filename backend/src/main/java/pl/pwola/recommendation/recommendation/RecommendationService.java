@@ -4,12 +4,14 @@ import org.springframework.stereotype.Service;
 import pl.pwola.recommendation.nlp.PriceConstraint;
 import pl.pwola.recommendation.nlp.PriceExtractionService;
 import pl.pwola.recommendation.nlp.TextProcessingService;
+import pl.pwola.recommendation.nlp.TfidfSimilarityService;
 import pl.pwola.recommendation.product.Product;
 import pl.pwola.recommendation.product.ProductRepository;
 
 import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @Service
@@ -19,17 +21,20 @@ public class RecommendationService {
     private final TextProcessingService textProcessingService;
     private final ScoringService scoringService;
     private final PriceExtractionService priceExtractionService;
+    private final TfidfSimilarityService tfidfSimilarityService;
 
     public RecommendationService(
             ProductRepository productRepository,
             TextProcessingService textProcessingService,
             ScoringService scoringService,
-            PriceExtractionService priceExtractionService
+            PriceExtractionService priceExtractionService,
+            TfidfSimilarityService tfidfSimilarityService
     ) {
         this.productRepository = productRepository;
         this.textProcessingService = textProcessingService;
         this.scoringService = scoringService;
         this.priceExtractionService = priceExtractionService;
+        this.tfidfSimilarityService = tfidfSimilarityService;
     }
 
     public List<RecommendationResponse> recommendProducts(RecommendationRequest request) {
@@ -39,11 +44,26 @@ public class RecommendationService {
 
         int maxResults = request.getMaxResults() == null ? 5 : request.getMaxResults();
 
-        return productRepository.findAll()
+        List<Product> candidateProducts = productRepository.findAll()
                 .stream()
                 .filter(product -> matchesFilters(product, request))
                 .filter(product -> matchesPriceConstraint(product, priceConstraint))
-                .map(product -> buildRecommendationResponse(product, queryTokens, expandedQueryTokens))
+                .toList();
+
+        Map<Long, Double> tfidfSimilarities = tfidfSimilarityService.calculateSimilarities(
+                request.getQuery(),
+                candidateProducts,
+                this::buildProductSearchText
+        );
+
+        return candidateProducts
+                .stream()
+                .map(product -> buildRecommendationResponse(
+                        product,
+                        queryTokens,
+                        expandedQueryTokens,
+                        tfidfSimilarities.getOrDefault(product.getId(), 0.0)
+                ))
                 .filter(response -> response.getScore() > 0)
                 .sorted(Comparator.comparingInt(RecommendationResponse::getScore).reversed())
                 .limit(maxResults)
@@ -113,13 +133,14 @@ public class RecommendationService {
     private RecommendationResponse buildRecommendationResponse(
             Product product,
             Set<String> queryTokens,
-            Set<String> expandedQueryTokens
+            Set<String> expandedQueryTokens,
+            double tfidfSimilarity
     ) {
         String productText = buildProductSearchText(product);
         Set<String> productTokens = textProcessingService.extractImportantTokens(productText);
 
         double textScore = scoringService.calculateTextScore(queryTokens, productTokens);
-        int finalScore = scoringService.calculateFinalScore(textScore, product);
+        int finalScore = scoringService.calculateFinalScore(textScore, tfidfSimilarity, product);
 
         Set<String> matchedKeywords = scoringService.findMatchedKeywords(expandedQueryTokens, productTokens);
 
@@ -136,9 +157,10 @@ public class RecommendationService {
                 product.getPrice(),
                 product.getRating(),
                 product.getReviewsCount(),
+                tfidfSimilarity,
                 finalScore,
                 matchedKeywords,
-                buildReason(matchedKeywords, finalScore)
+                buildReason(matchedKeywords, finalScore, tfidfSimilarity)
         );
     }
 
@@ -168,22 +190,28 @@ public class RecommendationService {
         return value == null ? "" : value;
     }
 
-    private String buildReason(Set<String> matchedKeywords, int score) {
+    private String buildReason(Set<String> matchedKeywords, int score, double tfidfSimilarity) {
+        int similarityPercent = (int) Math.round(tfidfSimilarity * 100);
+
         if (matchedKeywords == null || matchedKeywords.isEmpty()) {
-            return "Produkt ma niskie dopasowanie, ponieważ nie wykryto ważnych wspólnych cech.";
+            return "Produkt został oceniony na podstawie podobieństwa TF-IDF. Podobieństwo tekstowe wynosi "
+                    + similarityPercent + "%.";
         }
 
         if (score >= 75) {
-            return "Produkt mocno pasuje do zapytania, ponieważ zawiera cechy: "
-                    + String.join(", ", matchedKeywords) + ".";
+            return "Produkt mocno pasuje do zapytania. Wykryte cechy: "
+                    + String.join(", ", matchedKeywords)
+                    + ". Podobieństwo TF-IDF: " + similarityPercent + "%.";
         }
 
         if (score >= 40) {
-            return "Produkt częściowo pasuje do zapytania, ponieważ zawiera: "
-                    + String.join(", ", matchedKeywords) + ".";
+            return "Produkt częściowo pasuje do zapytania. Wspólne cechy: "
+                    + String.join(", ", matchedKeywords)
+                    + ". Podobieństwo TF-IDF: " + similarityPercent + "%.";
         }
 
-        return "Produkt ma słabe dopasowanie, ale wykryto wspólne cechy: "
-                + String.join(", ", matchedKeywords) + ".";
+        return "Produkt ma słabsze dopasowanie, ale wykryto cechy: "
+                + String.join(", ", matchedKeywords)
+                + ". Podobieństwo TF-IDF: " + similarityPercent + "%.";
     }
 }

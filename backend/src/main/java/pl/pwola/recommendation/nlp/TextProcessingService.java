@@ -3,9 +3,9 @@ package pl.pwola.recommendation.nlp;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class TextProcessingService {
@@ -24,9 +24,9 @@ public class TextProcessingService {
         this.openNlpTokenizerService = openNlpTokenizerService;
     }
 
-    public Set<String> extractImportantTokens(String text) {
+    public List<String> extractImportantTokenList(String text) {
         if (text == null || text.isBlank()) {
-            return Set.of();
+            return List.of();
         }
 
         String normalizedText = normalizeText(text);
@@ -37,7 +37,11 @@ public class TextProcessingService {
                 .filter(token -> token.length() > 1)
                 .filter(token -> !isNumber(token))
                 .filter(token -> !stopWordsProvider.getStopWords().contains(token))
-                .collect(Collectors.toCollection(LinkedHashSet::new));
+                .toList();
+    }
+
+    public Set<String> extractImportantTokens(String text) {
+        return new LinkedHashSet<>(extractImportantTokenList(text));
     }
 
     public Set<String> extractExpandedTokens(String text) {
