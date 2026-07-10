@@ -6,100 +6,253 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <style>
+        :root {
+            --bg: #f3f6fb;
+            --bg-gradient-1: rgba(37, 99, 235, 0.13);
+            --bg-gradient-2: rgba(14, 165, 233, 0.10);
+            --panel: rgba(255, 255, 255, 0.88);
+            --panel-solid: #ffffff;
+            --text: #0f172a;
+            --muted: #64748b;
+            --border: rgba(148, 163, 184, 0.35);
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --primary-soft: rgba(37, 99, 235, 0.10);
+            --shadow: 0 24px 80px rgba(15, 23, 42, 0.12);
+            --card-shadow: 0 14px 40px rgba(15, 23, 42, 0.10);
+            --chip: #eef4ff;
+            --chip-border: #dbeafe;
+            --danger: #ef4444;
+            --success: #16a34a;
+        }
+
+        html[data-theme="dark"] {
+            --bg: #0b1120;
+            --bg-gradient-1: rgba(37, 99, 235, 0.25);
+            --bg-gradient-2: rgba(14, 165, 233, 0.16);
+            --panel: rgba(15, 23, 42, 0.78);
+            --panel-solid: #111827;
+            --text: #e5e7eb;
+            --muted: #94a3b8;
+            --border: rgba(148, 163, 184, 0.22);
+            --primary: #60a5fa;
+            --primary-dark: #3b82f6;
+            --primary-soft: rgba(96, 165, 250, 0.14);
+            --shadow: 0 24px 80px rgba(0, 0, 0, 0.36);
+            --card-shadow: 0 16px 44px rgba(0, 0, 0, 0.26);
+            --chip: rgba(96, 165, 250, 0.13);
+            --chip-border: rgba(96, 165, 250, 0.22);
+        }
+
         * {
             box-sizing: border-box;
         }
 
         body {
             margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f4f6f8;
-            color: #1f2933;
+            min-height: 100vh;
+            font-family: Inter, Segoe UI, Arial, sans-serif;
+            background:
+                    radial-gradient(circle at 15% 10%, var(--bg-gradient-1), transparent 30%),
+                    radial-gradient(circle at 85% 5%, var(--bg-gradient-2), transparent 28%),
+                    linear-gradient(180deg, var(--bg), var(--bg));
+            color: var(--text);
+        }
+
+        button,
+        input,
+        select {
+            font-family: inherit;
         }
 
         .page {
-            max-width: 1040px;
+            width: min(1180px, calc(100% - 32px));
             margin: 0 auto;
-            padding: 40px 20px;
+            padding: 34px 0 60px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 44px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+        }
+
+        .logo {
+            width: 42px;
+            height: 42px;
+            border-radius: 14px;
+            display: grid;
+            place-items: center;
+            background: linear-gradient(135deg, #2563eb, #06b6d4);
+            color: white;
+            box-shadow: 0 12px 30px rgba(37, 99, 235, 0.30);
+        }
+
+        .theme-toggle {
+            border: 1px solid var(--border);
+            background: var(--panel);
+            color: var(--text);
+            border-radius: 999px;
+            padding: 10px 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+            backdrop-filter: blur(16px);
         }
 
         .hero {
             text-align: center;
-            margin-bottom: 32px;
-        }
-
-        .hero h1 {
-            margin-bottom: 10px;
-            font-size: 36px;
-        }
-
-        .hero p {
-            margin: 0;
-            color: #607080;
-            font-size: 17px;
-        }
-
-        .search-box {
-            background: white;
-            padding: 24px;
-            border-radius: 16px;
-            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
             margin-bottom: 28px;
         }
 
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: var(--primary-soft);
+            color: var(--primary);
+            border: 1px solid var(--border);
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .hero h1 {
+            margin: 0;
+            font-size: clamp(36px, 5vw, 64px);
+            letter-spacing: -0.07em;
+            line-height: 0.98;
+        }
+
+        .hero p {
+            margin: 18px auto 0;
+            color: var(--muted);
+            font-size: 18px;
+            max-width: 720px;
+            line-height: 1.6;
+        }
+
+        .search-shell {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 28px;
+            padding: 22px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(20px);
+            margin: 0 auto 28px;
+        }
+
         .search-row {
-            display: flex;
+            display: grid;
+            grid-template-columns: 1fr auto;
             gap: 12px;
         }
 
-        input, select {
-            padding: 14px 16px;
-            border: 1px solid #d0d7de;
-            border-radius: 12px;
-            font-size: 16px;
+        .search-input-wrap {
+            position: relative;
+        }
+
+        .search-input-wrap span {
+            position: absolute;
+            top: 50%;
+            left: 18px;
+            transform: translateY(-50%);
+            color: var(--muted);
+            pointer-events: none;
+        }
+
+        input,
+        select {
+            width: 100%;
+            border: 1px solid var(--border);
+            color: var(--text);
+            background: var(--panel-solid);
             outline: none;
-            background: white;
+            transition: 0.18s ease;
         }
 
         input {
-            flex: 1;
-            font-size: 18px;
+            height: 58px;
+            border-radius: 18px;
+            padding: 0 18px 0 48px;
+            font-size: 17px;
         }
 
-        input:focus, select:focus {
-            border-color: #2563eb;
-        }
-
-        button {
-            padding: 0 26px;
-            border: none;
-            border-radius: 12px;
-            background: #2563eb;
-            color: white;
-            font-size: 16px;
-            font-weight: bold;
+        select {
+            height: 52px;
+            border-radius: 16px;
+            padding: 0 14px;
+            font-size: 15px;
             cursor: pointer;
         }
 
-        button:hover {
-            background: #1d4ed8;
+        input:focus,
+        select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px var(--primary-soft);
         }
 
-        button:disabled {
-            background: #9ca3af;
+        .search-button {
+            min-width: 118px;
+            border: none;
+            border-radius: 18px;
+            color: white;
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            font-size: 16px;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 14px 32px rgba(37, 99, 235, 0.28);
+            transition: 0.18s ease;
+        }
+
+        .search-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 18px 38px rgba(37, 99, 235, 0.34);
+        }
+
+        .search-button:disabled {
+            opacity: 0.65;
             cursor: not-allowed;
+            transform: none;
         }
 
         .examples {
-            margin-top: 14px;
-            color: #607080;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+            margin-top: 16px;
+            color: var(--muted);
             font-size: 14px;
         }
 
         .example-link {
-            color: #2563eb;
+            border: 1px solid var(--border);
+            background: var(--panel-solid);
+            color: var(--primary);
+            padding: 7px 10px;
+            border-radius: 999px;
             cursor: pointer;
-            margin-right: 10px;
+            transition: 0.18s ease;
+        }
+
+        .example-link:hover {
+            border-color: var(--primary);
+            transform: translateY(-1px);
         }
 
         .filters {
@@ -112,7 +265,8 @@
         .filter-group {
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 7px;
+            animation: fadeIn 0.18s ease both;
         }
 
         .filter-group.hidden {
@@ -120,13 +274,22 @@
         }
 
         .filter-group label {
-            color: #607080;
+            color: var(--muted);
             font-size: 13px;
+            font-weight: 700;
+        }
+
+        .helper-line {
+            margin-top: 14px;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.5;
         }
 
         .status {
-            margin: 16px 0;
-            color: #607080;
+            margin: 22px 4px 16px;
+            color: var(--muted);
+            font-size: 15px;
         }
 
         .results {
@@ -135,100 +298,150 @@
         }
 
         .product-card {
-            background: white;
-            border-radius: 16px;
-            padding: 20px;
-            box-shadow: 0 6px 18px rgba(15, 23, 42, 0.07);
-            border-left: 6px solid #2563eb;
+            position: relative;
+            overflow: hidden;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 26px;
+            padding: 22px;
+            box-shadow: var(--card-shadow);
+            backdrop-filter: blur(18px);
+        }
+
+        .product-card::before {
+            content: "";
+            position: absolute;
+            inset: 0 auto 0 0;
+            width: 5px;
+            background: linear-gradient(180deg, #2563eb, #06b6d4);
         }
 
         .product-header {
             display: flex;
             justify-content: space-between;
-            gap: 16px;
+            gap: 18px;
             align-items: flex-start;
         }
 
         .product-title {
             margin: 0;
-            font-size: 22px;
+            font-size: 23px;
+            line-height: 1.15;
+            letter-spacing: -0.035em;
         }
 
-        .category {
-            color: #607080;
-            margin-top: 4px;
+        .category-path {
+            color: var(--muted);
+            margin-top: 8px;
+            font-size: 14px;
         }
 
         .score {
-            min-width: 86px;
+            min-width: 92px;
             text-align: center;
-            padding: 10px;
-            border-radius: 12px;
-            background: #eff6ff;
-            color: #1d4ed8;
-            font-weight: bold;
+            padding: 11px 12px;
+            border-radius: 16px;
+            background: var(--primary-soft);
+            color: var(--primary);
+            border: 1px solid var(--chip-border);
+            font-weight: 900;
             font-size: 20px;
         }
 
         .meta {
             display: flex;
-            gap: 16px;
+            gap: 10px;
             flex-wrap: wrap;
-            margin: 16px 0;
-            color: #344054;
+            margin: 18px 0 12px;
+        }
+
+        .meta-item,
+        .attribute,
+        .keyword {
+            border: 1px solid var(--chip-border);
+            background: var(--chip);
+            color: var(--text);
+            border-radius: 999px;
+            font-size: 13px;
+        }
+
+        .meta-item {
+            padding: 7px 10px;
         }
 
         .attributes {
             display: flex;
             gap: 8px;
             flex-wrap: wrap;
-            margin: 10px 0 14px;
+            margin: 12px 0 14px;
         }
 
         .attribute {
-            background: #f8fafc;
-            border: 1px solid #e5e7eb;
-            padding: 6px 10px;
-            border-radius: 999px;
-            font-size: 13px;
-            color: #344054;
+            padding: 7px 10px;
         }
 
         .reason {
-            margin: 12px 0;
-            line-height: 1.5;
+            margin: 16px 0 0;
+            line-height: 1.55;
+            color: var(--text);
         }
 
         .keywords {
             display: flex;
             gap: 8px;
             flex-wrap: wrap;
-            margin-top: 12px;
+            margin-top: 14px;
         }
 
         .keyword {
-            background: #eef2f7;
             padding: 6px 10px;
-            border-radius: 999px;
-            font-size: 13px;
-            color: #344054;
+            color: var(--muted);
         }
 
         .empty {
-            background: white;
-            padding: 24px;
-            border-radius: 16px;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            padding: 28px;
+            border-radius: 24px;
             text-align: center;
-            color: #607080;
+            color: var(--muted);
+            box-shadow: var(--card-shadow);
+        }
+
+        .empty strong {
+            color: var(--text);
+            display: block;
+            margin-bottom: 8px;
+            font-size: 18px;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(4px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         @media (max-width: 900px) {
-            .search-row {
-                flex-direction: column;
+            .page {
+                width: min(100% - 20px, 1180px);
+                padding-top: 20px;
             }
 
-            button {
-                padding: 14px;
+            .topbar {
+                margin-bottom: 30px;
+            }
+
+            .search-row {
+                grid-template-columns: 1fr;
+            }
+
+            .search-button {
+                height: 54px;
             }
 
             .filters {
@@ -247,35 +460,55 @@
 </head>
 <body>
 <div class="page">
+    <header class="topbar">
+        <div class="brand">
+            <div class="logo">NLP</div>
+            <span>Product Recommendation</span>
+        </div>
+
+        <button class="theme-toggle" id="themeToggle" type="button" onclick="toggleTheme()">
+            <span id="themeIcon">🌙</span>
+            <span id="themeText">Tryb ciemny</span>
+        </button>
+    </header>
+
     <section class="hero">
+        <div class="eyebrow">OpenNLP · rekomendacje · PostgreSQL</div>
         <h1>Wyszukiwarka produktów NLP</h1>
-        <p>Wpisz, czego szukasz, a system pokaże najlepiej dopasowane produkty.</p>
+        <p>
+            Wpisz zapytanie w języku Polskim, a system przeanalizuje tekst,
+            rozpozna cechy produktu i pokaże najlepiej dopasowane rekomendacje.
+        </p>
     </section>
 
-    <section class="search-box">
+    <section class="search-shell">
         <div class="search-row">
-            <input
-                    id="queryInput"
-                    type="text"
-                    placeholder="Np. buty wodoodporne do chodzenia po górach"
-                    autocomplete="off"
-            >
-            <button id="searchButton" onclick="searchProducts()">Szukaj</button>
+            <div class="search-input-wrap">
+                <span>⌕</span>
+                <input
+                        id="queryInput"
+                        type="text"
+                        placeholder="Np. buty wodoodporne do 390 zł"
+                        autocomplete="off"
+                >
+            </div>
+
+            <button id="searchButton" class="search-button" onclick="searchProducts()">Szukaj</button>
         </div>
 
         <div class="examples">
-            Przykłady:
-            <span class="example-link" onclick="setExample('buty wodoodporne w góry')">buty w góry</span>
+            <span>Przykłady:</span>
+            <span class="example-link" onclick="setExample('buty wodoodporne w góry do 390 zł')">buty w góry</span>
             <span class="example-link" onclick="setExample('czarna sukienka na randkę')">sukienka na randkę</span>
             <span class="example-link" onclick="setExample('plecak trekkingowy w góry')">plecak trekkingowy</span>
-            <span class="example-link" onclick="setExample('kurtka przeciwdeszczowa')">kurtka przeciwdeszczowa</span>
+            <span class="example-link" onclick="setExample('kurtka przeciwdeszczowa do 500 zł')">kurtka przeciwdeszczowa</span>
         </div>
 
         <div class="filters">
             <div class="filter-group" id="categoryGroup">
                 <label for="categoryFilter">Kategoria</label>
                 <select id="categoryFilter">
-                    <option value="">Dowolna kategoria</option>
+                    <option value="">Wybierz kategorię</option>
                     <option value="obuwie">Obuwie</option>
                     <option value="odzież">Odzież</option>
                     <option value="akcesoria">Akcesoria</option>
@@ -285,7 +518,8 @@
             <div class="filter-group hidden" id="genderGroup">
                 <label for="genderFilter">Dla kogo</label>
                 <select id="genderFilter">
-                    <option value="">Dowolnie</option>
+                    <option value="">Wybierz</option>
+                    <option value="any">Dowolnie</option>
                     <option value="męskie">Mężczyzna</option>
                     <option value="damskie">Kobieta</option>
                     <option value="unisex">Unisex</option>
@@ -295,25 +529,21 @@
             <div class="filter-group hidden" id="productTypeGroup">
                 <label for="productTypeFilter">Rodzaj produktu</label>
                 <select id="productTypeFilter">
-                    <option value="">Dowolny rodzaj produktu</option>
+                    <option value="">Wybierz rodzaj produktu</option>
                 </select>
             </div>
 
             <div class="filter-group hidden" id="colorGroup">
                 <label for="colorFilter">Kolor</label>
                 <select id="colorFilter">
-                    <option value="">Dowolny kolor</option>
-                    <option value="czarny">Czarny</option>
-                    <option value="brązowy">Brązowy</option>
-                    <option value="biały">Biały</option>
-                    <option value="beżowy">Beżowy</option>
-                    <option value="czerwony">Czerwony</option>
-                    <option value="niebieski">Niebieski</option>
-                    <option value="zielony">Zielony</option>
-                    <option value="szary">Szary</option>
-                    <option value="różowy">Różowy</option>
+                    <option value="any">Dowolny kolor</option>
                 </select>
             </div>
+        </div>
+
+        <div class="helper-line">
+            Filtry pojawiają się stopniowo: najpierw kategoria, potem grupa docelowa,
+            rodzaj produktu i opcjonalnie kolor.
         </div>
     </section>
 
@@ -335,6 +565,9 @@
     const genderFilter = document.getElementById("genderFilter");
     const productTypeFilter = document.getElementById("productTypeFilter");
     const colorFilter = document.getElementById("colorFilter");
+
+    const themeIcon = document.getElementById("themeIcon");
+    const themeText = document.getElementById("themeText");
 
     const productTypesByCategory = {
         "obuwie": [
@@ -359,8 +592,10 @@
             { value: "koszulka", label: "Koszulka", genders: ["męskie", "damskie", "unisex"] },
             { value: "spodnie trekkingowe", label: "Spodnie trekkingowe", genders: ["męskie", "damskie", "unisex"] },
             { value: "jeansy", label: "Jeansy", genders: ["męskie", "damskie", "unisex"] },
+            { value: "softshell", label: "Softshell", genders: ["męskie", "damskie", "unisex"] },
             { value: "sukienka", label: "Sukienka", genders: ["damskie"] },
-            { value: "spódnica", label: "Spódnica", genders: ["damskie"] }
+            { value: "spódnica", label: "Spódnica", genders: ["damskie"] },
+            { value: "legginsy sportowe", label: "Legginsy sportowe", genders: ["damskie", "unisex"] }
         ],
         "akcesoria": [
             { value: "plecak trekkingowy", label: "Plecak trekkingowy", genders: ["męskie", "damskie", "unisex"] },
@@ -369,9 +604,27 @@
             { value: "rękawiczki", label: "Rękawiczki", genders: ["męskie", "damskie", "unisex"] },
             { value: "skarpety trekkingowe", label: "Skarpety trekkingowe", genders: ["męskie", "damskie", "unisex"] },
             { value: "torba sportowa", label: "Torba sportowa", genders: ["męskie", "damskie", "unisex"] },
+            { value: "komin sportowy", label: "Komin sportowy", genders: ["męskie", "damskie", "unisex"] },
+            { value: "okulary sportowe", label: "Okulary sportowe", genders: ["męskie", "damskie", "unisex"] },
             { value: "torebka", label: "Torebka", genders: ["damskie"] }
         ]
     };
+
+    const colors = [
+        { value: "any", label: "Dowolny kolor" },
+        { value: "czarny", label: "Czarny" },
+        { value: "brązowy", label: "Brązowy" },
+        { value: "biały", label: "Biały" },
+        { value: "beżowy", label: "Beżowy" },
+        { value: "czerwony", label: "Czerwony" },
+        { value: "niebieski", label: "Niebieski" },
+        { value: "zielony", label: "Zielony" },
+        { value: "szary", label: "Szary" },
+        { value: "różowy", label: "Różowy" },
+        { value: "granatowy", label: "Granatowy" }
+    ];
+
+    initializeTheme();
 
     queryInput.addEventListener("keydown", function (event) {
         if (event.key === "Enter") {
@@ -414,7 +667,7 @@
     productTypeFilter.addEventListener("change", function () {
         resetColorSelect();
 
-        if (productTypeFilter.value || productTypeFilter.selectedIndex > 0) {
+        if (productTypeFilter.selectedIndex > 0) {
             show(colorGroup);
         } else {
             hide(colorGroup);
@@ -424,6 +677,34 @@
     });
 
     colorFilter.addEventListener("change", clearResults);
+
+    function initializeTheme() {
+        const savedTheme = localStorage.getItem("theme");
+        const preferredDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+        const theme = savedTheme || (preferredDark ? "dark" : "light");
+
+        document.documentElement.setAttribute("data-theme", theme);
+        updateThemeButton(theme);
+    }
+
+    function toggleTheme() {
+        const currentTheme = document.documentElement.getAttribute("data-theme") || "light";
+        const nextTheme = currentTheme === "light" ? "dark" : "light";
+
+        document.documentElement.setAttribute("data-theme", nextTheme);
+        localStorage.setItem("theme", nextTheme);
+        updateThemeButton(nextTheme);
+    }
+
+    function updateThemeButton(theme) {
+        if (theme === "dark") {
+            themeIcon.textContent = "☀️";
+            themeText.textContent = "Tryb jasny";
+        } else {
+            themeIcon.textContent = "🌙";
+            themeText.textContent = "Tryb ciemny";
+        }
+    }
 
     function show(element) {
         element.classList.remove("hidden");
@@ -435,7 +716,8 @@
 
     function resetGenderSelect() {
         genderFilter.innerHTML = `
-            <option value="">Dowolnie</option>
+            <option value="">Wybierz</option>
+            <option value="any">Dowolnie</option>
             <option value="męskie">Mężczyzna</option>
             <option value="damskie">Kobieta</option>
             <option value="unisex">Unisex</option>
@@ -444,23 +726,15 @@
 
     function resetProductTypeSelect() {
         productTypeFilter.innerHTML = `
-            <option value="">Dowolny rodzaj produktu</option>
+            <option value="">Wybierz rodzaj produktu</option>
+            <option value="any">Dowolny rodzaj produktu</option>
         `;
     }
 
     function resetColorSelect() {
-        colorFilter.innerHTML = `
-            <option value="">Dowolny kolor</option>
-            <option value="czarny">Czarny</option>
-            <option value="brązowy">Brązowy</option>
-            <option value="biały">Biały</option>
-            <option value="beżowy">Beżowy</option>
-            <option value="czerwony">Czerwony</option>
-            <option value="niebieski">Niebieski</option>
-            <option value="zielony">Zielony</option>
-            <option value="szary">Szary</option>
-            <option value="różowy">Różowy</option>
-        `;
+        colorFilter.innerHTML = colors
+            .map(color => `<option value="${color.value}">${color.label}</option>`)
+            .join("");
     }
 
     function populateProductTypes() {
@@ -486,6 +760,10 @@
     }
 
     function isProductTypeAvailableForGender(type, selectedGender) {
+        if (selectedGender === "any") {
+            return true;
+        }
+
         if (selectedGender === "unisex") {
             return type.genders.includes("unisex");
         }
@@ -495,19 +773,20 @@
 
     function setExample(text) {
         queryInput.value = text;
+        queryInput.focus();
     }
 
     async function searchProducts() {
         const query = queryInput.value.trim();
 
         if (!query) {
-            statusBox.textContent = "Wpisz zapytanie, np. „buty wodoodporne do chodzenia po górach”.";
+            statusBox.textContent = "Wpisz zapytanie, np. „buty wodoodporne do 390 zł”.";
             resultsBox.innerHTML = "";
             return;
         }
 
         searchButton.disabled = true;
-        statusBox.textContent = "Szukam najlepiej dopasowanych produktów...";
+        statusBox.textContent = "Analizuję zapytanie i szukam najlepiej dopasowanych produktów...";
         resultsBox.innerHTML = "";
 
         try {
@@ -541,7 +820,7 @@
     }
 
     function normalizeOptionalFilter(value) {
-        if (!value || value.trim() === "") {
+        if (!value || value.trim() === "" || value === "any") {
             return null;
         }
 
@@ -553,7 +832,8 @@
             statusBox.textContent = "";
             resultsBox.innerHTML = `
                 <div class="empty">
-                    Nie znaleziono pasujących produktów dla wybranych filtrów. Spróbuj zmienić zapytanie lub filtry.
+                    <strong>Brak dopasowanych produktów</strong>
+                    Spróbuj zmienić zapytanie, kategorię albo rodzaj produktu.
                 </div>
             `;
             return;
@@ -577,8 +857,8 @@
                 <div class="product-header">
                     <div>
                         <h2 class="product-title">${escapeHtml(product.productName)}</h2>
-                        <div class="category">
-                            ${escapeHtml(product.mainCategory || "Brak kategorii")}
+                        <div class="category-path">
+                            ${escapeHtml(product.mainCategory || "brak kategorii")}
                             ${product.subCategory ? " / " + escapeHtml(product.subCategory) : ""}
                             ${product.productType ? " / " + escapeHtml(product.productType) : ""}
                         </div>
@@ -587,13 +867,13 @@
                 </div>
 
                 <div class="meta">
-                    <span>Cena: ${formatPrice(product.price)}</span>
-                    <span>Ocena: ${product.rating ?? "brak"}/5</span>
-                    <span>Opinie: ${product.reviewsCount ?? 0}</span>
+                    <span class="meta-item">Cena: ${formatPrice(product.price)}</span>
+                    <span class="meta-item">Ocena: ${product.rating ?? "brak"}/5</span>
+                    <span class="meta-item">Opinie: ${product.reviewsCount ?? 0}</span>
                 </div>
 
                 <div class="attributes">
-                    <span class="attribute">Dla: ${escapeHtml(product.targetGender || "brak")}</span>
+                    <span class="attribute">Dla: ${formatGender(product.targetGender)}</span>
                     <span class="attribute">Kolor: ${escapeHtml(product.color || "brak")}</span>
                     <span class="attribute">Sezon: ${escapeHtml(product.season || "brak")}</span>
                     <span class="attribute">Wodoodporne: ${product.waterproof ? "tak" : "nie"}</span>
@@ -619,6 +899,22 @@
         }
 
         return Number(price).toFixed(2) + " zł";
+    }
+
+    function formatGender(gender) {
+        if (gender === "męskie") {
+            return "mężczyzna";
+        }
+
+        if (gender === "damskie") {
+            return "kobieta";
+        }
+
+        if (gender === "unisex") {
+            return "unisex";
+        }
+
+        return "brak";
     }
 
     function escapeHtml(value) {
