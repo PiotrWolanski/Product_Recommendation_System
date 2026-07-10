@@ -1,9 +1,9 @@
 package pl.pwola.recommendation.nlp;
 
-import opennlp.tools.tokenize.SimpleTokenizer;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.Locale;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -12,13 +12,16 @@ public class TextProcessingService {
 
     private final StopWordsProvider stopWordsProvider;
     private final SynonymService synonymService;
+    private final OpenNlpTokenizerService openNlpTokenizerService;
 
     public TextProcessingService(
             StopWordsProvider stopWordsProvider,
-            SynonymService synonymService
+            SynonymService synonymService,
+            OpenNlpTokenizerService openNlpTokenizerService
     ) {
         this.stopWordsProvider = stopWordsProvider;
         this.synonymService = synonymService;
+        this.openNlpTokenizerService = openNlpTokenizerService;
     }
 
     public Set<String> extractImportantTokens(String text) {
@@ -27,14 +30,13 @@ public class TextProcessingService {
         }
 
         String normalizedText = normalizeText(text);
-        String[] tokens = SimpleTokenizer.INSTANCE.tokenize(normalizedText);
 
-        return Arrays.stream(tokens)
-                .map(String::trim)
-                .filter(token -> !token.isBlank())
+        return openNlpTokenizerService.tokenize(normalizedText)
+                .stream()
+                .map(this::cleanToken)
                 .filter(token -> token.length() > 1)
-                .filter(token -> !stopWordsProvider.isStopWord(token))
-                .collect(Collectors.toSet());
+                .filter(token -> !stopWordsProvider.getStopWords().contains(token))
+                .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
     public Set<String> extractExpandedTokens(String text) {
@@ -44,9 +46,20 @@ public class TextProcessingService {
 
     private String normalizeText(String text) {
         return text
-                .toLowerCase()
-                .replaceAll("[^\\p{L}\\p{N}\\s]", " ")
-                .replaceAll("\\s+", " ")
+                .toLowerCase(Locale.ROOT)
+                .replace("-", " ")
+                .replace("/", " ")
+                .replace("\\", " ");
+    }
+
+    private String cleanToken(String token) {
+        if (token == null) {
+            return "";
+        }
+
+        return token
+                .toLowerCase(Locale.ROOT)
+                .replaceAll("[^\\p{L}\\p{N}]", "")
                 .trim();
     }
 }

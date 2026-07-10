@@ -8,13 +8,51 @@ import java.util.Set;
 public class StopWordsProvider {
 
     private final Set<String> stopWords = Set.of(
-            "i", "oraz", "a", "w", "we", "z", "ze", "do", "na", "po", "pod", "nad",
-            "dla", "od", "o", "u", "za", "przez", "bez", "się", "sie", "jest",
-            "są", "sa", "to", "ten", "ta", "te", "tych", "który", "ktora",
-            "które", "jak", "np", "np.", "lub", "albo"
+            "i",
+            "oraz",
+            "a",
+            "ale",
+            "czy",
+            "to",
+            "te",
+            "ten",
+            "ta",
+            "w",
+            "we",
+            "na",
+            "do",
+            "dla",
+            "z",
+            "ze",
+            "po",
+            "pod",
+            "nad",
+            "przy",
+            "od",
+            "o",
+            "u",
+            "się",
+            "sie",
+            "jest",
+            "są",
+            "sa",
+            "ma",
+            "mają",
+            "maja",
+            "potrzebuję",
+            "potrzebuje",
+            "szukam",
+            "chcę",
+            "chce",
+            "żeby",
+            "zeby",
+            "jakieś",
+            "jakies",
+            "jakiś",
+            "jakis"
     );
 
-    public boolean isStopWord(String word) {
-        return stopWords.contains(word);
+    public Set<String> getStopWords() {
+        return stopWords;
     }
 }
