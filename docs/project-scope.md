@@ -12,3 +12,4 @@ The user enters a query, for example:
 
 ```text
 buty wodoodporne do chodzenia po górach
+```

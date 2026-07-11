@@ -23,3 +23,4 @@ User query:
 
 ```text
 buty wodoodporne do chodzenia po górach
+```
