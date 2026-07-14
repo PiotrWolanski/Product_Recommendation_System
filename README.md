@@ -73,5 +73,5 @@ Projekt był przygotowany dla Java 17. Jeżeli lokalnie używana jest nowsza wer
 ### 1. Sklonowanie repozytorium
 
 ```powershell
-git clone <URL_REPOZYTORIUM>
+git clone https://github.com/PiotrWolanski/Product_Recommendation_System.git
 cd Product_Recommendation_System/backend
